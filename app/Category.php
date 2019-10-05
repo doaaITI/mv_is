@@ -8,7 +8,7 @@ class Category extends Model
 {
     public $timestamps = true;
     public $fillable = ['title','parent_id'];
-
+   public  $articles = null;
     //with recursion we can get all childs
 
     public function childs() {
@@ -19,14 +19,19 @@ class Category extends Model
 
 
 
-  public function articles()
-    {
-        return $this->hasMany('App\Article','category_id','id');
-    }
 
+
+public function articles()
+{
+   return $this->hasManyThrough( 'App\Article', 'App\Category',
+   'parent_id', 'category_id', 'id');
+
+
+}
 
     public static function getAllArticles($categoryId, $articles = null)
     {
+
 
       if ($articles === null) {
          $articles = collect();

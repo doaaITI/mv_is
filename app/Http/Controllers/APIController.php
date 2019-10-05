@@ -15,6 +15,7 @@ use App\Http\Requests\ArticleStoreRequest;
 
 class APIController extends Controller
 {
+    public  $childs_id=[];
     public function signup(UserStoreRequest $request)
     {
 
@@ -176,10 +177,13 @@ try{
 
  public function findCateogryArticles($category_id){
 
-    $articles=Category::getAllArticles($category_id);
+
+   $articles = Category::find($category_id)->with('childs')->with('articles')->get();
           return response()->json(['data' =>$articles ,'status'=>200]);
 
  }
+
+
 
 /**update category */
  public function updateCategory(Request $request ,$id){
