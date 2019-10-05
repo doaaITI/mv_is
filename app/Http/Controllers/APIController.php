@@ -105,7 +105,7 @@ try{
          $request->validated();
 try{
         $input = $request->all();
-        $input['parent_id'] = empty($input['parent_id']) ? 0 : $input['parent_id'];
+        $input['parent_id'] = empty($input['parent_id']) ? null : $input['parent_id'];
 
         Category::create($input);
         return response()->json(['message' => 'category created successfully'], 200);
@@ -123,7 +123,7 @@ try{
     {
 
         try{
-        $allCategories = Category::where('parent_id',0)->get();
+        $allCategories = Category::where('parent_id',null)->get();
 
         foreach($allCategories as $category){
            $category->child=$category->childs;
@@ -175,17 +175,9 @@ try{
  */
 
  public function findCateogryArticles($category_id){
-      $category=Category::where('id' ,$category_id)->first();
-           $main_articles= $category->articles;
-            $sub_articles=[];
-               foreach($category->childs as $child){
-                array_push($sub_articles,$child->articles);
-               }
 
-       $result['main_articles']=$main_articles;
-       $result['sub_articles']=$sub_articles;
-
-          return response()->json(['data' =>  $result,'status'=>200]);
+    $articles=Category::getAllArticles($category_id);
+          return response()->json(['data' =>$articles ,'status'=>200]);
 
  }
 
